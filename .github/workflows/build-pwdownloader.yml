@@ -1,0 +1,102 @@
+name: Build PWDownloader
+
+on:
+  push:
+    branches: [ main, master ]
+    paths:
+      - 'PWClient152/ClientTools/PWDownloader/**'
+      - '.github/workflows/build-pwdownloader.yml'
+  pull_request:
+    branches: [ main, master ]
+    paths:
+      - 'PWClient152/ClientTools/PWDownloader/**'
+      - '.github/workflows/build-pwdownloader.yml'
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-2019
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Setup MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    - name: Build PWDownloader (Release)
+      working-directory: PWClient152/ClientTools/PWDownloader
+      run: |
+        msbuild PWDownloader.sln /p:Configuration=Release /p:Platform=Win32 /m /v:minimal
+
+    - name: Build PWDownloader (Debug)
+      working-directory: PWClient152/ClientTools/PWDownloader
+      run: |
+        msbuild PWDownloader.sln /p:Configuration=Debug /p:Platform=Win32 /m /v:minimal
+
+    - name: Check build output
+      run: |
+        if (Test-Path "PWClient152/ClientTools/PWDownloader/Release/PWDownloader.exe") {
+            Write-Host "Release build successful!"
+            Get-Item "PWClient152/ClientTools/PWDownloader/Release/PWDownloader.exe" | Select-Object Name, Length
+        } else {
+            Write-Error "Release build failed - PWDownloader.exe not found"
+            exit 1
+        }
+
+        if (Test-Path "PWClient152/ClientTools/PWDownloader/Debug/PWDownloader.exe") {
+            Write-Host "Debug build successful!"
+            Get-Item "PWClient152/ClientTools/PWDownloader/Debug/PWDownloader.exe" | Select-Object Name, Length
+        } else {
+            Write-Error "Debug build failed - PWDownloader.exe not found"
+            exit 1
+        }
+
+    - name: Upload Release Build
+      uses: actions/upload-artifact@v4
+      with:
+        name: PWDownloader-Release
+        path: PWClient152/ClientTools/PWDownloader/Release/PWDownloader.exe
+        retention-days: 30
+
+    - name: Upload Debug Build
+      uses: actions/upload-artifact@v4
+      with:
+        name: PWDownloader-Debug
+        path: PWClient152/ClientTools/PWDownloader/Debug/PWDownloader.exe
+        retention-days: 30
+
+    - name: Upload Release DLLs and dependencies
+      uses: actions/upload-artifact@v4
+      with:
+        name: PWDownloader-Release-Libs
+        path: |
+          PWClient152/ClientTools/PWDownloader/Release/*.dll
+          PWClient152/ClientTools/PWDownloader/7z/*.dll
+        retention-days: 30
+        if-no-files-found: ignore
+
+  build-summary:
+    runs-on: windows-latest
+    needs: build
+    if: always()
+
+    steps:
+    - name: Build Summary
+      run: |
+        Write-Host "========================================" -ForegroundColor Cyan
+        Write-Host "PWDownloader Build Summary" -ForegroundColor Cyan
+        Write-Host "========================================" -ForegroundColor Cyan
+        Write-Host ""
+        Write-Host "Build Status: ${{ needs.build.result }}" -ForegroundColor $(if (${{ needs.build.result }} -eq 'success') { 'Green' } else { 'Red' })
+        Write-Host ""
+        Write-Host "Artifacts Available:" -ForegroundColor Yellow
+        Write-Host "  - PWDownloader-Release (executable)" -ForegroundColor White
+        Write-Host "  - PWDownloader-Debug (executable)" -ForegroundColor White
+        Write-Host "  - PWDownloader-Release-Libs (dependencies)" -ForegroundColor White
+        Write-Host ""
+        Write-Host "Build Configuration:" -ForegroundColor Yellow
+        Write-Host "  - Platform: Windows (windows-2019)" -ForegroundColor White
+        Write-Host "  - Compiler: MSVC (Visual Studio 2019)" -ForegroundColor White
+        Write-Host "  - Architecture: Win32 (x86)" -ForegroundColor White
+        Write-Host ""
