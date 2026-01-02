@@ -215,6 +215,8 @@
     <ClInclude Include="PWInstallDlg.h" />
     <ClInclude Include="resource.h" />
     <ClInclude Include="StdAfx.h" />
+    <ClInclude Include="AFilePackMan_stub.h" />
+    <ClInclude Include="AFilePackage_stub.h" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="PWDownloader.rc" />

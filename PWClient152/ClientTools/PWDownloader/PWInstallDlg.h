@@ -27,7 +27,7 @@ public:
 	CString	m_szProgress;
 	//}}AFX_DATA
 
-	// ��ѹĿ¼
+	// ��ѹĿ¼
 	CString m_sExtractDir;
 
 // Overrides
@@ -43,13 +43,7 @@ public:
 	bool m_bInstallOK;
 
 	void OnExtractComplete();
-
-	// PCK Verification & Patching functions
-	BOOL VerifyAndInitPCK(const char* szPckFile);
-	BOOL PatchPCKFile(const char* szPckFile, const char* szFileName, const char* szNewFile);
-	BOOL Base64Decode(const char* szBase64, BYTE* pOut, DWORD* pdwOutSize);
-	BOOL CalculatePCKChecksum(const char* szPckFile, BYTE* pChecksum);
-
+	
 public:
 	static CPWInstallDlg* s_pThis;
 	static void OnExtractCallback(int op, IArchive7Z::PROPERTY& prop);
