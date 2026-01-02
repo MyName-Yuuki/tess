@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>17.0</VCProjectVersion>
+    <ProjectGuid>{12345678-1234-1234-1234-123456789ABC}</ProjectGuid>
+    <Keyword>MFCProj</Keyword>
+    <RootNamespace>PWDownloader</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseOfMfc>Dynamic</UseOfMfc>
+    <CharacterSet>MultiByte</CharacterSet>
+    <PlatformToolset>v143</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="PropertySheets">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)$(Configuration)\</OutDir>
+    <IntDir>$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_AFXDLL;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>./7z/cpp;../../../CNewSkin/p2sp_4th_lib;../../../CNewSkin/include;../../../../SDK/3rdSDK/include;../../../../SDK/acsdk/Include;../../Engine/AngelicaFile/Header;../../Engine/Output/afsdk/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../../CNewSkin/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0804</Culture>
+      <PreprocessorDefinitions>_AFXDLL;NDEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_WINDOWS;_AFXDLL;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PrecompiledHeaderFile>stdafx.h</PrecompiledHeaderFile>
+      <AdditionalIncludeDirectories>./7z/cpp;../../../CNewSkin/p2sp_4th_lib;../../../CNewSkin/include;../../../../SDK/3rdSDK/include;../../../../SDK/acsdk/Include;../../Engine/AngelicaFile/Header;../../Engine/Output/afsdk/include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <BasicRuntimeChecks>EnableFastChecks</BasicRuntimeChecks>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>gdiplus.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalLibraryDirectories>../../../CNewSkin/lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+    </Link>
+    <Midl>
+      <MkTypLibCompatible>false</MkTypLibCompatible>
+      <ValidateAllParameters>true</ValidateAllParameters>
+      <PreprocessorDefinitions>_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </Midl>
+    <ResourceCompile>
+      <Culture>0x0804</Culture>
+      <PreprocessorDefinitions>_AFXDLL;_DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>$(IntDir);%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ResourceCompile>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <ClCompile Include="7z\CPP\Windows\DLL.cpp" />
+    <ClCompile Include="7z\CPP\Windows\Error.cpp" />
+    <ClCompile Include="7z\CPP\Windows\FileDir.cpp" />
+    <ClCompile Include="7z\CPP\Windows\FileFind.cpp" />
+    <ClCompile Include="7z\CPP\Windows\FileIO.cpp" />
+    <ClCompile Include="7z\CPP\Windows\FileName.cpp" />
+    <ClCompile Include="7z\CPP\Windows\PropVariant.cpp" />
+    <ClCompile Include="7z\CPP\Windows\PropVariantConversions.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Common\FileStreams.cpp" />
+    <ClCompile Include="7z\CPP\Common\IntToString.cpp" />
+    <ClCompile Include="7z\CPP\Common\MyString.cpp" />
+    <ClCompile Include="7z\CPP\Common\MyVector.cpp" />
+    <ClCompile Include="7z\CPP\Common\NewHandler.cpp" />
+    <ClCompile Include="7z\CPP\Common\StringConvert.cpp" />
+    <ClCompile Include="7z\CPP\Common\UTFConvert.cpp" />
+    <ClCompile Include="7z\CPP\Common\Wildcard.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Common\StreamUtils.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Archive\7z\7zDecode.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Archive\7z\7zExtract.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Archive\7z\7zHandler.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Archive\7z\7zIn.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Archive\7z\7zRegister.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Archive\7z\7zItem.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Common\CreateCoder.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Common\FilterCoder.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Common\MethodId.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Common\ProgressUtils.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Common\StreamBinder.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Common\StreamObjects.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Compress\Bcj2Coder.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Compress\Bcj2Register.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Compress\BranchMisc.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Compress\CopyCoder.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Compress\CopyRegister.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Compress\DeflateDecoder.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Compress\DeflateRegister.cpp" />
+    <ClCompile Include="7z\CPP\7zip\Crypto\RandGen.cpp" />
+    <ClCompile Include="DlgPreInstall.cpp" />
+    <ClCompile Include="DlgSetSpeed.cpp" />
+    <ClCompile Include="EC_Archive7Z.cpp" />
+    <ClCompile Include="EC_PWDownload.cpp" />
+    <ClCompile Include="LogFile.cpp" />
+    <ClCompile Include="PWDownloader.cpp" />
+    <ClCompile Include="PWDownloaderDlg.cpp" />
+    <ClCompile Include="PWInstallDlg.cpp" />
+    <ClCompile Include="StdAfx.cpp">
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Create</PrecompiledHeader>
+      <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="7z\CPP\Windows\DLL.h" />
+    <ClInclude Include="7z\CPP\Windows\Error.h" />
+    <ClInclude Include="7z\CPP\Windows\FileDir.h" />
+    <ClInclude Include="7z\CPP\Windows\FileFind.h" />
+    <ClInclude Include="7z\CPP\Windows\FileIO.h" />
+    <ClInclude Include="7z\CPP\Windows\FileName.h" />
+    <ClInclude Include="7z\CPP\Windows\PropVariant.h" />
+    <ClInclude Include="7z\CPP\Windows\PropVariantConversions.h" />
+    <ClInclude Include="7z\CPP\Windows\ResourceString.h" />
+    <ClInclude Include="7z\CPP\Common\MyCom.h" />
+    <ClInclude Include="7z\CPP\Common\MyString.h" />
+    <ClInclude Include="7z\CPP\Common\MyVector.h" />
+    <ClInclude Include="7z\CPP\Common\NewHandler.h" />
+    <ClInclude Include="7z\CPP\Common\StringConvert.h" />
+    <ClInclude Include="7z\CPP\Common\Types.h" />
+    <ClInclude Include="7z\CPP\Common\Common.h" />
+    <ClInclude Include="7z\CPP\Common\Defs.h" />
+    <ClInclude Include="7z\CPP\7zip\Common\FileStreams.h" />
+    <ClInclude Include="7z\CPP\7zip\Common\StreamUtils.h" />
+    <ClInclude Include="7z\CPP\7zip\Archive\7z\7zDecode.h" />
+    <ClInclude Include="7z\CPP\7zip\Archive\7z\7zExtract.h" />
+    <ClInclude Include="7z\CPP\7zip\Archive\7z\7zHandler.h" />
+    <ClInclude Include="7z\CPP\7zip\Archive\7z\7zIn.h" />
+    <ClInclude Include="7z\CPP\7zip\Archive\7z\7zItem.h" />
+    <ClInclude Include="7z\CPP\7zip\Archive\7z\7zRegister.h" />
+    <ClInclude Include="7z\CPP\7zip\Common\CreateCoder.h" />
+    <ClInclude Include="7z\CPP\7zip\Common\FilterCoder.h" />
+    <ClInclude Include="7z\CPP\7zip\Common\MethodId.h" />
+    <ClInclude Include="7z\CPP\7zip\Common\ProgressUtils.h" />
+    <ClInclude Include="7z\CPP\7zip\Common\StreamBinder.h" />
+    <ClInclude Include="7z\CPP\7zip\Common\StreamObjects.h" />
+    <ClInclude Include="7z\CPP\7zip\Compress\Bcj2Coder.h" />
+    <ClInclude Include="7z\CPP\7zip\Compress\Bcj2Register.h" />
+    <ClInclude Include="7z\CPP\7zip\Compress\BranchMisc.h" />
+    <ClInclude Include="7z\CPP\7zip\Compress\CopyCoder.h" />
+    <ClInclude Include="7z\CPP\7zip\Compress\CopyRegister.h" />
+    <ClInclude Include="7z\CPP\7zip\Compress\DeflateDecoder.h" />
+    <ClInclude Include="7z\CPP\7zip\Compress\DeflateRegister.h" />
+    <ClInclude Include="7z\CPP\7zip\Crypto\RandGen.h" />
+    <ClInclude Include="7z\CPP\7zip\ICoder.h" />
+    <ClInclude Include="7z\CPP\7zip\IStream.h" />
+    <ClInclude Include="DlgPreInstall.h" />
+    <ClInclude Include="DlgSetSpeed.h" />
+    <ClInclude Include="EC_Archive7Z.h" />
+    <ClInclude Include="EC_PWDownload.h" />
+    <ClInclude Include="EC_Pipe.h" />
+    <ClInclude Include="LogFile.h" />
+    <ClInclude Include="PWDownloader.h" />
+    <ClInclude Include="PWDownloaderDlg.h" />
+    <ClInclude Include="PWInstallDlg.h" />
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="StdAfx.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="PWDownloader.rc" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="res\PWDownloader.ico" />
+    <None Include="ReadMe.txt" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+  <ProjectExtensions>
+    <VisualStudio>
+      <UserProperties RESOURCE_FILE="PWDownloader.rc" />
+    </VisualStudio>
+  </ProjectExtensions>
+</Project>
