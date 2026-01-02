@@ -67,8 +67,12 @@ jobs:
         $slnFile = Get-ChildItem -Filter *.sln | Select-Object -First 1
         if ($slnFile) {
           Write-Host "Found solution: $($slnFile.Name)" -ForegroundColor Green
-          msbuild $slnFile.Name /p:Configuration=Release /p:Platform=Win32 /m /v:normal /nologo
+          msbuild $slnFile.Name /p:Configuration=Release /p:Platform=Win32 /m /v:detailed /nologo | Tee-Object -Variable buildOutput
           $buildResult = $LASTEXITCODE
+
+          # Save build output to file
+          $buildOutput | Out-File -FilePath "build_log.txt"
+          Write-Host "Build log saved to build_log.txt" -ForegroundColor Cyan
         } else {
           Write-Host "No solution file found" -ForegroundColor Red
           $buildResult = 1
@@ -77,9 +81,30 @@ jobs:
         if ($buildResult -eq 0) {
           Write-Host "Build succeeded!" -ForegroundColor Green
         } else {
-          Write-Host "Build failed (expected if dependencies are missing)" -ForegroundColor Yellow
-          Write-Host "This is normal - full build requires complete Angelica SDK" -ForegroundColor Cyan
+          Write-Host "Build completed with errors (exit code: $buildResult)" -ForegroundColor Yellow
+          Write-Host "This is expected if Angelica Framework SDK is missing" -ForegroundColor Cyan
         }
+
+    - name: Upload build artifacts
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: pwdownloader-build-output
+        path: |
+          PWClient152/ClientTools/PWDownloader/Release/*.exe
+          PWClient152/ClientTools/PWDownloader/Release/*.dll
+          PWClient152/ClientTools/PWDownloader/build_log.txt
+        if-no-files-found: ignore
+        retention-days: 30
+
+    - name: Upload any intermediate files
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: pwdownloader-intermediate
+        path: PWClient152/ClientTools/PWDownloader/Release/
+        if-no-files-found: ignore
+        retention-days: 7
 
     - name: Check build output
       continue-on-error: true
