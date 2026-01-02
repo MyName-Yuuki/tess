@@ -24,15 +24,38 @@ jobs:
     - name: Setup MSBuild
       uses: microsoft/setup-msbuild@v2
 
+    - name: List project files
+      working-directory: PWClient152/ClientTools/PWDownloader
+      run: |
+        Write-Host "Listing files in PWDownloader directory:"
+        Get-ChildItem -Force
+        Write-Host ""
+        Write-Host "Checking for .sln files:"
+        Get-ChildItem -Filter *.sln
+
     - name: Build PWDownloader (Release)
       working-directory: PWClient152/ClientTools/PWDownloader
       run: |
-        msbuild PWDownloader.sln /p:Configuration=Release /p:Platform=Win32 /m /v:minimal
+        $slnFile = Get-ChildItem -Filter *.sln | Select-Object -First 1
+        if ($slnFile) {
+            Write-Host "Building solution: $($slnFile.Name)"
+            msbuild $slnFile.Name /p:Configuration=Release /p:Platform=Win32 /m /v:minimal
+        } else {
+            Write-Error "No .sln file found!"
+            exit 1
+        }
 
     - name: Build PWDownloader (Debug)
       working-directory: PWClient152/ClientTools/PWDownloader
       run: |
-        msbuild PWDownloader.sln /p:Configuration=Debug /p:Platform=Win32 /m /v:minimal
+        $slnFile = Get-ChildItem -Filter *.sln | Select-Object -First 1
+        if ($slnFile) {
+            Write-Host "Building solution: $($slnFile.Name)"
+            msbuild $slnFile.Name /p:Configuration=Debug /p:Platform=Win32 /m /v:minimal
+        } else {
+            Write-Error "No .sln file found!"
+            exit 1
+        }
 
     - name: Check build output
       run: |
@@ -88,15 +111,21 @@ jobs:
         Write-Host "PWDownloader Build Summary" -ForegroundColor Cyan
         Write-Host "========================================" -ForegroundColor Cyan
         Write-Host ""
-        Write-Host "Build Status: ${{ needs.build.result }}" -ForegroundColor $(if (${{ needs.build.result }} -eq 'success') { 'Green' } else { 'Red' })
+        $buildResult = "${{ needs.build.result }}"
+        Write-Host "Build Status: $buildResult"
+        if ($buildResult -eq "success") {
+            Write-Host "Build completed successfully!" -ForegroundColor Green
+        } else {
+            Write-Host "Build failed or was cancelled." -ForegroundColor Red
+        }
         Write-Host ""
         Write-Host "Artifacts Available:" -ForegroundColor Yellow
-        Write-Host "  - PWDownloader-Release (executable)" -ForegroundColor White
-        Write-Host "  - PWDownloader-Debug (executable)" -ForegroundColor White
-        Write-Host "  - PWDownloader-Release-Libs (dependencies)" -ForegroundColor White
+        Write-Host "  - PWDownloader-Release (executable)"
+        Write-Host "  - PWDownloader-Debug (executable)"
+        Write-Host "  - PWDownloader-Release-Libs (dependencies)"
         Write-Host ""
         Write-Host "Build Configuration:" -ForegroundColor Yellow
-        Write-Host "  - Platform: Windows (windows-2019)" -ForegroundColor White
-        Write-Host "  - Compiler: MSVC (Visual Studio 2019)" -ForegroundColor White
-        Write-Host "  - Architecture: Win32 (x86)" -ForegroundColor White
+        Write-Host "  - Platform: Windows (windows-2019)"
+        Write-Host "  - Compiler: MSVC (Visual Studio 2019)"
+        Write-Host "  - Architecture: Win32 (x86)"
         Write-Host ""
