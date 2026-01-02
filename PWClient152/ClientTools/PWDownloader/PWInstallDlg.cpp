@@ -6,13 +6,9 @@
 #include "PWInstallDlg.h"
 #include "LogFile.h"
 
-// Use stub headers if Angelica SDK is not available
-#if !defined(HAVE_ANGELICA_SDK)
-#include "AFilePackMan_stub.h"
-#else
+// Include REAL Angelica Framework SDK
 #include <AFilePackage.h>
 #include <AFilePackMan.h>
-#endif
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -25,10 +21,8 @@ extern char g_szClientCompleted[];
 extern char g_szInstallDir[];
 extern void UDeleteFile(const char* filename);
 
-#if !defined(HAVE_ANGELICA_SDK)
-// Global instance of AFilePackMan (stub version)
-AFilePackMan g_AFilePackMan;
-#endif
+// Global instance of AFilePackMan (defined in Angelica SDK)
+extern AFilePackMan g_AFilePackMan;
 
 /////////////////////////////////////////////////////////////////////////////
 // CPWInstallDlg dialog
