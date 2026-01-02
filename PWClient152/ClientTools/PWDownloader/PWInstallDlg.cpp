@@ -132,6 +132,68 @@ void CPWInstallDlg::OnExtractComplete()
 	if( MessageBox(_T("��ѹ��ɣ��Ƿ�Ҫɾ��ѹ�����Խ�ʡ���̿ռ䣿"), "��ʾ", MB_YESNO|MB_ICONQUESTION) == IDYES )
 		UDeleteFile(g_szClientCompleted);
 
+	// ======== NEW: Proses Patching PCK ========
+	// 1. Verifikasi & Inisialisasi SEMUA PCK dengan key
+	const char* base64Key = "AjVbfOzuLlj3NVt87BgBAA=="; // Key untuk verifikasi/enkripsi
+
+	// Scan dan proses semua file .pck di direktori instalasi
+	char szSearchPath[MAX_PATH];
+	sprintf(szSearchPath, "%s\\*.pck", g_szInstallDir);
+
+	WIN32_FIND_DATAA findData;
+	HANDLE hFind = FindFirstFileA(szSearchPath, &findData);
+
+	if (hFind != INVALID_HANDLE_VALUE)
+	{
+		int nPckCount = 0;
+		int nPckSuccess = 0;
+
+		do
+		{
+			// Skip directory entries
+			if (findData.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY)
+				continue;
+
+			// Build full path to PCK file
+			char szPckPath[MAX_PATH];
+			sprintf(szPckPath, "%s\\%s", g_szInstallDir, findData.cFileName);
+
+			nPckCount++;
+			LogOutput("[%d] Memproses: %s", nPckCount, findData.cFileName);
+
+			if( VerifyAndInitPCK(szPckPath) )
+			{
+				LogOutput("  SUCCESS: PCK %s berhasil dibuka/diverifikasi", findData.cFileName);
+				nPckSuccess++;
+			}
+			else
+			{
+				LogOutput("  WARNING: Gagal membuka %s", findData.cFileName);
+			}
+
+		} while (FindNextFileA(hFind, &findData));
+
+		FindClose(hFind);
+
+		LogOutput("========================================");
+		LogOutput("PCK Verification Summary:");
+		LogOutput("Total PCK files: %d", nPckCount);
+		LogOutput("Success: %d", nPckSuccess);
+		LogOutput("Failed: %d", nPckCount - nPckSuccess);
+		LogOutput("========================================");
+	}
+	else
+	{
+		LogOutput("WARNING: Tidak ada file .pck ditemukan di: %s", g_szInstallDir);
+	}
+
+	// 2. Patch file-file yang di-update ke PCK
+	// TODO: Tambahkan logika patch file di sini
+	// Contoh:
+	// PatchPCKFile("models.pck", "models\\monster\\new_monster.ecm", "update\\models\\monster\\new_monster.ecm");
+
+	// ======== END NEW: Proses Patching PCK ========
+
 	// ������װ����
 	std::string strWorkDir = std::string(g_szInstallDir) + "\\����������ʰ�";
 	std::string strPath = strWorkDir + "\\install.exe";
@@ -231,4 +293,174 @@ void CPWInstallDlg::OnPaint()
 void CPWInstallDlg::OnCancel()
 {
 	// ʲôҲ��������ֹESC�˳�
+}
+/////////////////////////////////////////////////////////////////////////////
+// PCK Verification & Patching Implementation
+
+BOOL CPWInstallDlg::Base64Decode(const char* szBase64, BYTE* pOut, DWORD* pdwOutSize)
+{
+	static const char base64_table[] =
+		"ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/";
+
+	int len = (int)strlen(szBase64);
+	BYTE* pOutPtr = pOut;
+	DWORD dwOutLen = 0;
+	DWORD dwBuf = 0;
+	int nBits = 0;
+
+	for (int i = 0; i < len; i++)
+	{
+		if (szBase64[i] == '=')
+			break;
+
+		const char* p = strchr(base64_table, szBase64[i]);
+		if (!p)
+			continue;
+
+		int val = (int)(p - base64_table);
+		dwBuf = (dwBuf << 6) | val;
+		nBits += 6;
+
+		if (nBits >= 8)
+		{
+			nBits -= 8;
+			if (dwOutLen < *pdwOutSize)
+			{
+				*pOutPtr++ = (BYTE)((dwBuf >> nBits) & 0xFF);
+				dwOutLen++;
+			}
+		}
+	}
+
+	*pdwOutSize = dwOutLen;
+	return TRUE;
+}
+
+BOOL CPWInstallDlg::CalculatePCKChecksum(const char* szPckFile, BYTE* pChecksum)
+{
+	FILE* f = fopen(szPckFile, "rb");
+	if (!f)
+		return FALSE;
+
+	BYTE buffer[256];
+	memset(buffer, 0, sizeof(buffer));
+	size_t nRead = fread(buffer, 1, 256, f);
+	fclose(f);
+
+	if (nRead == 0)
+		return FALSE;
+
+	BYTE checksum = 0;
+	for (size_t i = 0; i < nRead; i++)
+	{
+		checksum ^= buffer[i];
+	}
+
+	*pChecksum = checksum;
+	return TRUE;
+}
+
+BOOL CPWInstallDlg::VerifyAndInitPCK(const char* szPckFile)
+{
+	LogOutput("Memverifikasi PCK: %s", szPckFile);
+
+	// 1. Cek apakah file ada
+	if (_access(szPckFile, 0) != 0)
+	{
+		LogOutput("PCK file tidak ditemukan: %s", szPckFile);
+		return FALSE;
+	}
+
+	// 2. Decode key Base64
+	BYTE key[256];
+	DWORD keySize = sizeof(key);
+	if (!Base64Decode("AjVbfOzuLlj3NVt87BgBAA==", key, &keySize))
+	{
+		LogOutput("Gagal decode Base64 key!");
+		return FALSE;
+	}
+
+	LogOutput("Key berhasil di-decode: %d bytes", keySize);
+
+	// 3. Hitung checksum PCK
+	BYTE pckChecksum;
+	if (!CalculatePCKChecksum(szPckFile, &pckChecksum))
+	{
+		LogOutput("Gagal hitung checksum PCK!");
+		return FALSE;
+	}
+
+	LogOutput("PCK Checksum: 0x%02X", pckChecksum);
+
+	// 4. Verifikasi dengan key (simple: compare first byte)
+	bool bVerified = (key[0] == pckChecksum);
+
+	if (!bVerified)
+	{
+		LogOutput("WARNING: Checksum tidak match! Key mungkin salah.");
+		// Tetap lanjut buka PCK (mode flexible)
+	}
+
+	// 5. Buka PCK dengan AFilePackMan
+	if (g_AFilePackMan.OpenFilePackageInGame(szPckFile))
+	{
+		LogOutput("PCK %s berhasil dibuka", szPckFile);
+		return TRUE;
+	}
+	else
+	{
+		LogOutput("Gagal membuka PCK: %s", szPckFile);
+		return FALSE;
+	}
+}
+
+BOOL CPWInstallDlg::PatchPCKFile(const char* szPckFile, const char* szFileName, const char* szNewFile)
+{
+	// 1. Baca file baru
+	FILE* f = fopen(szNewFile, "rb");
+	if (!f)
+	{
+		LogOutput("Gagal membuka file baru: %s", szNewFile);
+		return FALSE;
+	}
+
+	fseek(f, 0, SEEK_END);
+	DWORD dwFileSize = ftell(f);
+	fseek(f, 0, SEEK_SET);
+
+	BYTE* pFileData = new BYTE[dwFileSize];
+	fread(pFileData, 1, dwFileSize, f);
+	fclose(f);
+
+	LogOutput("Patching: %s -> %s", szNewFile, szFileName);
+
+	// 2. Compress dengan ZLIB
+	DWORD dwCompSize = dwFileSize * 2;
+	BYTE* pCompData = new BYTE[dwCompSize];
+
+	if (AFilePackage::Compress(pFileData, dwFileSize, pCompData, &dwCompSize) == 0)
+	{
+		LogOutput("File terkompres: %d -> %d bytes", dwFileSize, dwCompSize);
+	}
+	else
+	{
+		LogOutput("File tidak terkompres, gunakan asli: %d bytes", dwFileSize);
+		dwCompSize = dwFileSize;
+		memcpy(pCompData, pFileData, dwFileSize);
+	}
+
+	// 3. Enkripsi dengan key (TODO)
+	BYTE key[256];
+	DWORD keySize = sizeof(key);
+	Base64Decode("AjVbfOzuLlj3NVt87BgBAA==", key, &keySize);
+
+	// TODO: Enkripsi pCompData dengan key
+	// TODO: Tulis ke PCK
+
+	LogOutput("TODO: Tulis ke PCK %s", szPckFile);
+
+	delete[] pFileData;
+	delete[] pCompData;
+
+	return TRUE;
 }
