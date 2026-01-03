@@ -1,16 +1,17 @@
 /*
  * FILE: LogFile.cpp
  *
- * DESCRIPTION: 
+ * DESCRIPTION:
  *
  * CREATED BY: Shizhenhua, 2013/7/20
  *
- * HISTORY: 
+ * HISTORY:
  *
  * Copyright (c) 2011 ACE Studio, All Rights Reserved.
  */
 
 
+#include "stdafx.h"
 #include "LogFile.h"
 #include <windows.h>
 
@@ -55,26 +56,26 @@ static const char* GetTimeStamp(int type)
 //  
 ///////////////////////////////////////////////////////////////////////////
 
-// ¹¹Ôìº¯Êý
+// ï¿½ï¿½ï¿½ìº¯ï¿½ï¿½
 CLogFile::CLogFile()
 {
 	m_pLog = NULL;
 }
 
-// Îö¹¹º¯Êý
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
 CLogFile::~CLogFile()
 {
 	Close();
 }
 
-// »ñÈ¡ÊµÀý
+// ï¿½ï¿½È¡Êµï¿½ï¿½
 CLogFile& CLogFile::GetInstance()
 {
 	static CLogFile obj;
 	return obj;
 }
 
-// ´´½¨ÈÕÖ¾ÎÄ¼þ
+// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ö¾ï¿½Ä¼ï¿½
 bool CLogFile::CreateLog(const char* szLogFile)
 {
 	Close();
@@ -87,7 +88,7 @@ bool CLogFile::CreateLog(const char* szLogFile)
 	return true;
 }
 
-// ¹Ø±ÕÈÕÖ¾
+// ï¿½Ø±ï¿½ï¿½ï¿½Ö¾
 void CLogFile::Close()
 {
 	if( m_pLog )
@@ -99,7 +100,7 @@ void CLogFile::Close()
 	}
 }
 
-// Ð´ÈëÈÕÖ¾
+// Ð´ï¿½ï¿½ï¿½ï¿½Ö¾
 void CLogFile::WriteLog(const char* szMsg)
 {
 	if( m_pLog && szMsg )
@@ -109,7 +110,7 @@ void CLogFile::WriteLog(const char* szMsg)
 	}
 }
 
-// Ð´ÈëÈÕÖ¾
+// Ð´ï¿½ï¿½ï¿½ï¿½Ö¾
 void LogOutput(const char* szMsg, ...)
 {
 	static char szText[4096];

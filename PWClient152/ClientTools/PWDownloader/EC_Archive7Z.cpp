@@ -5,12 +5,13 @@
  *
  * CREATED BY: Shizhenhua, 2013/7/16
  *
- * HISTORY: 
+ * HISTORY:
  *
  * Copyright (c) 2011 ACE Studio, All Rights Reserved.
  */
 
 
+#include "stdafx.h"
 #include "EC_Archive7Z.h"
 
 #include "Common/MyString.h"
@@ -85,7 +86,7 @@ static HRESULT IsArchiveItemFolder(IInArchive *archive, UInt32 index, bool &resu
 	return IsArchiveItemProp(archive, index, kpidIsDir, result);
 }
 
-// »ñÈ¡ÎÄ¼þµÄÀ©Õ¹Ãû
+// ï¿½ï¿½È¡ï¿½Ä¼ï¿½ï¿½ï¿½ï¿½ï¿½Õ¹ï¿½ï¿½
 static std::string GetFileExt(const char* filename)
 {
 	std::string strFile = filename;
@@ -103,7 +104,7 @@ static std::string GetFileExt(const char* filename)
 
 ///////////////////////////////////////////////////////////////////////////
 //  
-//  ´ò¿ªÎÄµµµÄ»Øµ÷´¦Àí
+//  ï¿½ï¿½ï¿½Äµï¿½ï¿½Ä»Øµï¿½ï¿½ï¿½ï¿½ï¿½
 //  
 ///////////////////////////////////////////////////////////////////////////
 
@@ -176,7 +177,7 @@ public:
 		}
 	}
 
-	// ³õÊ¼»¯
+	// ï¿½ï¿½Ê¼ï¿½ï¿½
 	void Init(const UString& pw)
 	{
 		m_bPWIsDefined = !pw.IsEmpty();
@@ -191,7 +192,7 @@ protected:
 
 ///////////////////////////////////////////////////////////////////////////
 //  
-//  ½âÑ¹ÎÄµµµÄ»Øµ÷´¦Àí
+//  ï¿½ï¿½Ñ¹ï¿½Äµï¿½ï¿½Ä»Øµï¿½ï¿½ï¿½ï¿½ï¿½
 //  
 ///////////////////////////////////////////////////////////////////////////
 
@@ -438,7 +439,7 @@ public:
 		}
 	}
 
-	// ³õÊ¼»¯
+	// ï¿½ï¿½Ê¼ï¿½ï¿½
 	void Init(IInArchive* pArchive, const UString& outDir, const UString& pw, IArchive7Z::ExtractCallback pCB = NULL)
 	{
 		m_pArchive = pArchive;
@@ -489,19 +490,19 @@ class CECArchive7Z : public IArchive7Z
 public:
 	CECArchive7Z();
 
-	// Ïú»Ù¶ÔÏó
+	// ï¿½ï¿½ï¿½Ù¶ï¿½ï¿½ï¿½
 	void Release();
 
-	// ÉèÖÃ½âÑ¹¹ý³ÌµÄ»Øµ÷º¯Êý
+	// ï¿½ï¿½ï¿½Ã½ï¿½Ñ¹ï¿½ï¿½ï¿½ÌµÄ»Øµï¿½ï¿½ï¿½ï¿½ï¿½
 	void SetExtractCB(ExtractCallback pfnCallback);
 
-	// ¼ÓÔØ7zÑ¹Ëõ°ü
+	// ï¿½ï¿½ï¿½ï¿½7zÑ¹ï¿½ï¿½ï¿½ï¿½
 	bool LoadPack(const char* filename, const char* password);
 
-	// ½âÑ¹µ½Ö¸¶¨Ä¿Â¼
+	// ï¿½ï¿½Ñ¹ï¿½ï¿½Ö¸ï¿½ï¿½Ä¿Â¼
 	bool ExtractTo(const char* szDestDir);
 
-	// Ð¶ÔØÑ¹Ëõ°ü
+	// Ð¶ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½
 	void Unload();
 
 protected:
@@ -515,7 +516,7 @@ protected:
 	UString m_sPassword;
 };
 
-// ¹¹Ôìº¯Êý
+// ï¿½ï¿½ï¿½ìº¯ï¿½ï¿½
 CECArchive7Z::CECArchive7Z() : m_pArchive(NULL), m_pStreamSpec(NULL), m_pCreateFunc(NULL),
 	m_pOpenCallback(NULL), m_pExtractCallback(NULL)
 {
@@ -533,20 +534,20 @@ CECArchive7Z::CECArchive7Z() : m_pArchive(NULL), m_pStreamSpec(NULL), m_pCreateF
 	}
 }
 
-// Ïú»Ù¶ÔÏó
+// ï¿½ï¿½ï¿½Ù¶ï¿½ï¿½ï¿½
 void CECArchive7Z::Release()
 {
 	Unload();
 	delete this;
 }
 
-// ÉèÖÃ½âÑ¹¹ý³ÌµÄ»Øµ÷º¯Êý
+// ï¿½ï¿½ï¿½Ã½ï¿½Ñ¹ï¿½ï¿½ï¿½ÌµÄ»Øµï¿½ï¿½ï¿½ï¿½ï¿½
 void CECArchive7Z::SetExtractCB(ExtractCallback pfnCallback)
 {
 	m_pCBExtract = pfnCallback;
 }
 
-// ¼ÓÔØ7ZÑ¹Ëõ°ü
+// ï¿½ï¿½ï¿½ï¿½7ZÑ¹ï¿½ï¿½ï¿½ï¿½
 bool CECArchive7Z::LoadPack(const char* filename, const char* password)
 {
 	if( !filename || !strcmp(filename, "") || !m_pCreateFunc )
@@ -577,8 +578,8 @@ bool CECArchive7Z::LoadPack(const char* filename, const char* password)
 	}
 
 	// Create CInFileStream
-	m_pStreamSpec = new CInFileStream;	// ´´½¨³öÀ´µÄÒýÓÃ¼ÆÊý¾ÓÈ»Îª0£¬¸ã²»¶®
-	m_pStreamSpec->AddRef();			// ÕâÀïÊÖ¶¯ÖÃÎª1
+	m_pStreamSpec = new CInFileStream;	// ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã¼ï¿½ï¿½ï¿½ï¿½ï¿½È»Îª0ï¿½ï¿½ï¿½ã²»ï¿½ï¿½
+	m_pStreamSpec->AddRef();			// ï¿½ï¿½ï¿½ï¿½ï¿½Ö¶ï¿½ï¿½ï¿½Îª1
 	if( !m_pStreamSpec->Open(filename) )
 	{
 		LogOutput("CECArchive7Z::LoadPack, Open the archive file(%s) failed!", filename);
@@ -599,7 +600,7 @@ bool CECArchive7Z::LoadPack(const char* filename, const char* password)
 	return true;
 }
 
-// ½âÑ¹ËùÓÐÎÄ¼þµ½Ö¸¶¨Ä¿Â¼
+// ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½ï¿½Ä¼ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½Ä¿Â¼
 bool CECArchive7Z::ExtractTo(const char* szDestDir)
 {
 	if( !szDestDir || !m_pArchive )
@@ -616,7 +617,7 @@ bool CECArchive7Z::ExtractTo(const char* szDestDir)
 	{
 		CSysString msg;
 		NWindows::NError::MyFormatMessage(hr, msg);
-		MessageBoxA(NULL, msg, "´íÎó", MB_OK|MB_ICONERROR);
+		MessageBoxA(NULL, msg, "ï¿½ï¿½ï¿½ï¿½", MB_OK|MB_ICONERROR);
 		LogOutput("CECArchive7Z::ExtractTo, Extract files from archive failed! %s", msg);
 		return false;
 	}
@@ -624,7 +625,7 @@ bool CECArchive7Z::ExtractTo(const char* szDestDir)
 	return true;
 }
 
-// Ð¶ÔØÑ¹Ëõ°ü
+// Ð¶ï¿½ï¿½Ñ¹ï¿½ï¿½ï¿½ï¿½
 void CECArchive7Z::Unload()
 {
 	m_sPassword = L"";
@@ -636,7 +637,7 @@ void CECArchive7Z::Unload()
 
 ///////////////////////////////////////////////////////////////////////////
 
-// ´´½¨Ö¸¶¨µÄ½Ó¿Ú
+// ï¿½ï¿½ï¿½ï¿½Ö¸ï¿½ï¿½ï¿½Ä½Ó¿ï¿½
 IArchive7Z* CreateArchive7Z()
 {
 	return new CECArchive7Z();

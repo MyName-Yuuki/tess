@@ -5,6 +5,7 @@
 #include "PWDownloader.h"
 #include "PWInstallDlg.h"
 #include "LogFile.h"
+#include <io.h>  // For _access()
 
 // Include REAL Angelica Framework SDK
 #include <AFilePackage.h>
